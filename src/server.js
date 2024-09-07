@@ -10,12 +10,15 @@ const app = express();
 // Add this line to handle the /api prefix
 app.use('/api', express.Router());
 
+// Move this CORS configuration before any route definitions
 app.use(cors({
   origin: ['https://alumni-frontend-five.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 204
 }));
+
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
