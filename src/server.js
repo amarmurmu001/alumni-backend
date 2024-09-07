@@ -6,9 +6,8 @@ const cors = require('cors');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(cors());  // This should be before your route definitions
+app.use(cors());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -42,6 +41,12 @@ app.use('/api/events', eventRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/jobs', jobRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only start the server if we're not in production (i.e., not on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
