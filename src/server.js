@@ -7,6 +7,9 @@ dotenv.config();
 
 const app = express();
 
+// Add this line to handle the /api prefix
+app.use('/api', express.Router());
+
 app.use(cors({
   origin: ['https://alumni-frontend-five.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -28,39 +31,28 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-app.get('/', (req, res) => {
+// Update your routes to include the /api prefix
+app.use('/api/auth', authRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/user', userRoutes);
+
+// Update other routes as needed
+app.get('/api', (req, res) => {
   res.send('Alumni Association Platform API');
 });
-
-const authRoutes = require('./routes/auth');
-const donationRoutes = require('./routes/donations');
-const jobRoutes = require('./routes/jobs');
-const eventRoutes = require('./routes/events');
-const userRoutes = require('./routes/user');
-
-app.use('/auth', authRoutes);
-app.use('/donations', donationRoutes);
-app.use('/jobs', jobRoutes);
-app.use('/events', eventRoutes);
-app.use('/user', userRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
 
-app.post('/auth/login', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   // Your login logic here
-  const { email, password } = req.body;
-  // ... authenticate user ...
-  res.json({ token: 'your_auth_token' });
 });
 
-app.post('/auth/forgot-password', async (req, res) => {
-  // Implement forgot password logic here
-  const { email } = req.body;
-  // TODO: Add your forgot password logic
-  // For example, send a password reset email
-  res.status(200).json({ message: 'Password reset email sent' });
+app.post('/api/auth/forgot-password', async (req, res) => {
+  // Your forgot password logic here
 });
 
 // Only start the server if we're not in production (i.e., not on Vercel)
