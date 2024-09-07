@@ -23,6 +23,12 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+// Add this before your route definitions
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'https://alumni-frontend-five.vercel.app/',
+  credentials: true,
+}));
+
 app.get('/', (req, res) => {
   res.send('Alumni Association Platform API');
 });
