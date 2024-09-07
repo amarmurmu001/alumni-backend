@@ -34,6 +34,9 @@ const eventRoutes = require('./routes/events');
 const userRoutes = require('./routes/user');
 const jobRoutes = require('./routes/jobs');
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/job-postings', jobPostingRoutes);
