@@ -19,7 +19,14 @@ app.use('/api', express.Router());
 
 // Move this CORS configuration before any route definitions
 app.use(cors({
-  origin: ['https://alumni-frontend-five.vercel.app', 'http://localhost:3000'],
+  origin: function(origin, callback) {
+    const allowedOrigins = ['http://localhost:3000', 'https://alumni-frontend-five.vercel.app'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
