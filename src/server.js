@@ -7,7 +7,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://alumni-frontend-five.vercel.app', 'http://localhost:3000'],
+  credentials: true,
+}));
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI, {
@@ -22,12 +25,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   console.log('Connected to MongoDB');
 });
-
-// Add this before your route definitions
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://alumni-frontend-five.vercel.app/',
-  credentials: true,
-}));
 
 app.get('/', (req, res) => {
   res.send('Alumni Association Platform API');
@@ -47,6 +44,14 @@ app.use('/user', userRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  // Your login logic here
+  // Example:
+  // const { email, password } = req.body;
+  // ... authenticate user ...
+  // res.json({ token: 'your_auth_token' });
 });
 
 // Only start the server if we're not in production (i.e., not on Vercel)
