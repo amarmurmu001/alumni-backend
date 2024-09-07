@@ -6,8 +6,8 @@ const jobSchema = new mongoose.Schema({
   location: { type: String, required: true },
   description: { type: String, required: true },
   requirements: { type: String, required: true },
-  salary: { type: String, required: false }, // Make this optional
-  applicationDeadline: { type: Date, required: false }, // Make this optional
+  salary: { type: String },
+  applicationDeadline: { type: Date, required: true },
   postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   createdAt: { type: Date, default: Date.now },
 });

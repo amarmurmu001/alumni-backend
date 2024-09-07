@@ -5,23 +5,18 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 // POST route to create a new donation
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
   try {
-    const { amount, donorName, email, message } = req.body;
-    
+    const { amount } = req.body;
     const newDonation = new Donation({
       amount,
-      donorName,
-      email,
-      message,
+      donor: req.user.id
     });
-
     const savedDonation = await newDonation.save();
-    
     res.status(201).json(savedDonation);
   } catch (error) {
-    console.error('Error creating donation:', error);
-    res.status(500).json({ message: 'Error creating donation', error: error.message });
+    console.error('Error processing donation:', error);
+    res.status(500).json({ message: 'Error processing donation', error: error.message });
   }
 });
 

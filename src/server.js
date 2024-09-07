@@ -29,20 +29,19 @@ app.get('/', (req, res) => {
 
 const authRoutes = require('./routes/auth');
 const donationRoutes = require('./routes/donations');
-const jobPostingRoutes = require('./routes/jobPostings');
+const jobRoutes = require('./routes/jobs');
 const eventRoutes = require('./routes/events');
 const userRoutes = require('./routes/user');
-const jobRoutes = require('./routes/jobs');
+
+app.use('/auth', authRoutes);
+app.use('/donations', donationRoutes);
+app.use('/jobs', jobRoutes);
+app.use('/events', eventRoutes);
+app.use('/user', userRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is running' });
 });
-app.use('/api/auth', authRoutes);
-app.use('/api/donations', donationRoutes);
-app.use('/api/job-postings', jobPostingRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/jobs', jobRoutes);
 
 // Only start the server if we're not in production (i.e., not on Vercel)
 if (process.env.NODE_ENV !== 'production') {

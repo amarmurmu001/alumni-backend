@@ -7,9 +7,7 @@ const router = express.Router();
 // POST route to create a new job
 router.post('/', auth, async (req, res) => {
   try {
-    console.log('Received job data:', req.body); // Add this line
     const { title, company, location, description, requirements, salary, applicationDeadline } = req.body;
-    
     const newJob = new Job({
       title,
       company,
@@ -20,9 +18,7 @@ router.post('/', auth, async (req, res) => {
       applicationDeadline,
       postedBy: req.user.id
     });
-
     const savedJob = await newJob.save();
-    
     res.status(201).json(savedJob);
   } catch (error) {
     console.error('Error creating job:', error);

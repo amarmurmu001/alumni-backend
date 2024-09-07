@@ -8,7 +8,7 @@ const eventSchema = new mongoose.Schema({
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   maxAttendees: { type: Number },
-  status: { type: String, enum: ['upcoming', 'ongoing', 'completed'], default: 'upcoming' },
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Event', eventSchema);
