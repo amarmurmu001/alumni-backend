@@ -5,15 +5,25 @@ const User = require('../models/User');
 const router = express.Router();
 
 router.get('/profile', auth, async (req, res) => {
+  console.log('Profile route hit');
+  console.log('User from token:', req.user);
   try {
     const user = await User.findById(req.user.id).select('-password');
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      console.log('User not found in database');
+      return res.status(404).json({ message: 'User not found' });
     }
-    res.json(user);
+    console.log('User found:', user);
+    res.json({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      graduationYear: user.graduationYear,
+      major: user.major
+    });
   } catch (error) {
     console.error('Error fetching user profile:', error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ message: 'Server error' });
   }
 });
 

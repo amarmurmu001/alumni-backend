@@ -23,21 +23,46 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  console.log('Login attempt received:', req.body);
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      console.log('User not found:', email);
+      return res.status(400).json({ message: 'Invalid Credentials' });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      console.log('Password mismatch for user:', email);
+      return res.status(400).json({ message: 'Invalid Credentials' });
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token });
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: error.message });
+
+    const payload = {
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        graduationYear: user.graduationYear,
+        major: user.major
+      }
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' },
+      (err, token) => {
+        if (err) throw err;
+        console.log('Login successful for user:', email);
+        res.json({ token, user: payload.user });
+      }
+    );
+  } catch (err) {
+    console.error('Server error during login:', err.message);
+    res.status(500).send('Server error');
   }
 });
 

@@ -14,10 +14,7 @@ dotenv.config();
 
 const app = express();
 
-// Add this line to handle the /api prefix
-app.use('/api', express.Router());
-
-// Move this CORS configuration before any route definitions
+// Move CORS configuration before any route definitions
 app.use(cors({
   origin: function(origin, callback) {
     const allowedOrigins = ['http://localhost:3000', 'https://alumni-frontend-five.vercel.app'];
@@ -79,5 +76,10 @@ if (process.env.NODE_ENV !== 'production') {
     console.log(`Server running on port ${PORT}`);
   });
 }
+
+// Add a test route
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Test route working' });
+});
 
 module.exports = app;

@@ -1,26 +1,24 @@
 const jwt = require('jsonwebtoken');
 
-const auth = (req, res, next) => {
+module.exports = function(req, res, next) {
+  // Get token from header
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
+  // Check if no token
+  if (!token) {
+    return res.status(401).json({ msg: 'No token, authorization denied' });
+  }
+
   try {
-    const authHeader = req.header('Authorization');
-    console.log('Auth header:', authHeader); // Add this line
-
-    if (!authHeader) {
-      throw new Error('No Authorization header');
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    console.log('Token:', token); // Add this line
-
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded token:', decoded); // Add this line
-
-    req.user = { id: decoded.id };
+    
+    // Add user from payload
+    req.user = decoded.user;
+    console.log('Decoded user:', req.user); // New log
     next();
-  } catch (error) {
-    console.error('Auth middleware error:', error); // Add this line
-    res.status(401).send({ error: 'Please authenticate.' });
+  } catch (err) {
+    console.error('Token verification error:', err); // New log
+    res.status(401).json({ msg: 'Token is not valid' });
   }
 };
-
-module.exports = auth;
