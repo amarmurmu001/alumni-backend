@@ -40,14 +40,12 @@ router.post('/login', async (req, res) => {
     }
 
     const payload = {
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        graduationYear: user.graduationYear,
-        major: user.major
-      }
+      id: user.id, // Make sure this is included
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      graduationYear: user.graduationYear,
+      major: user.major
     };
 
     jwt.sign(
@@ -56,13 +54,25 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        console.log('Login successful for user:', email);
-        res.json({ token, user: payload.user });
+        res.json({ token, user: { id: user.id, email: user.email, firstName: user.firstName, lastName: user.lastName } });
       }
     );
   } catch (err) {
     console.error('Server error during login:', err.message);
     res.status(500).send('Server error');
+  }
+});
+
+// Add this route if it's not already there
+router.post('/logout', (req, res) => {
+  try {
+    // In a stateless JWT authentication system, we don't need to do anything server-side
+    // The client will handle removing the token
+    console.log('Logout request received');
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    res.status(500).json({ message: 'Internal server error during logout' });
   }
 });
 

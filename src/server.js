@@ -32,6 +32,12 @@ app.use(cors({
 
 app.use(express.json());
 
+// Add logging middleware
+app.use((req, res, next) => {
+  console.log(`Received ${req.method} request to ${req.path}`);
+  next();
+});
+
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -80,6 +86,12 @@ if (process.env.NODE_ENV !== 'production') {
 // Add a test route
 app.get('/api/test', (req, res) => {
   res.json({ message: 'Test route working' });
+});
+
+// Add this near the end of the file, after all route definitions
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error', error: err.message });
 });
 
 module.exports = app;
