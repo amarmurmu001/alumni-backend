@@ -52,6 +52,7 @@ db.once('open', () => {
 });
 
 // Update your routes to include the /api prefix
+
 app.use('/api/auth', authRoutes);
 app.use('/api/donations', donationRoutes);
 app.use('/api/jobs', jobRoutes);
@@ -59,7 +60,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/user', userRoutes);
 
 // Update other routes as needed
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.send('Alumni Association Platform API');
 });
 
