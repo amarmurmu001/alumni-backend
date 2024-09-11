@@ -2,9 +2,19 @@
 
 This is the backend part of our project.
 
+## Prerequisites
+
+- Node.js (v14 or later recommended)
+- npm (usually comes with Node.js)
+- Git
+
 ## Setup
 
-1. Ensure you have Node.js installed on your system.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-organization/your-project.git
+   cd your-project
+   ```
 
 2. Navigate to the backend folder:
    ```bash
@@ -16,6 +26,31 @@ This is the backend part of our project.
    npm install
    ```
 
+4. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit the `.env` file with your local configuration.
+
+   # Environment variables
+NEXT_PUBLIC_API_URL=http://localhost:5000
+
+# Server configuration
+PORT=5000
+
+# MongoDB connection string
+MONGODB_URI=your_mongodb_uri_here
+
+# JWT secret key
+JWT_SECRET=your_jwt_secret_here
+
 ## Running the server
 
 To start the development server:
+```bash
+npm start
+```
+
+The server will run on `http://localhost:5000`.
+```bash
+
