@@ -12,8 +12,7 @@ This is the backend part of our project.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-organization/your-project.git
-   cd your-project
+   https://github.com/amarmurmu001/alumni-backend.git
    ```
 
 2. Navigate to the backend folder:
@@ -31,8 +30,9 @@ This is the backend part of our project.
    cp .env.example .env
    ```
    Edit the `.env` file with your local configuration.
+   
 
-   # Environment variables
+# Environment variables
 NEXT_PUBLIC_API_URL=http://localhost:5000
 
 # Server configuration
@@ -52,5 +52,4 @@ npm start
 ```
 
 The server will run on `http://localhost:5000`.
-```bash
 
