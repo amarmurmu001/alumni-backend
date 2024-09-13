@@ -7,15 +7,19 @@ const router = express.Router();
 // POST route to create a new event
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, date, location, description } = req.body;
+    console.log('Received event data:', req.body); // Keep this log
+    const { title, date, location, description, registrationLink, maxAttendees } = req.body;
     const newEvent = new Event({
       title,
       date,
       location,
       description,
+      registrationLink, // Make sure this line is present
+      maxAttendees: maxAttendees ? Number(maxAttendees) : undefined,
       organizer: req.user.id
     });
     const savedEvent = await newEvent.save();
+    console.log('Saved event:', savedEvent); // Add this log
     res.status(201).json(savedEvent);
   } catch (error) {
     console.error('Error creating event:', error);
@@ -56,10 +60,13 @@ router.get('/', async (req, res) => {
 // Add this route to fetch a single event by ID
 router.get('/:id', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id).populate('organizer', 'firstName lastName');
+    const event = await Event.findById(req.params.id)
+      .populate('organizer', 'firstName lastName')
+      .select('title date location description registrationLink maxAttendees attendees'); // Include registrationLink here
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
+    console.log('Fetched event:', event); // Add this line for debugging
     res.json(event);
   } catch (error) {
     console.error('Error fetching event:', error);
@@ -67,23 +74,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Add this new route for event registration
 router.post('/:id/register', auth, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {
-      return res.status(404).json({ error: 'Event not found' });
+      return res.status(404).json({ message: 'Event not found' });
     }
+
+    // Check if user is already registered
     if (event.attendees.includes(req.user.id)) {
-      return res.status(400).json({ error: 'Already registered for this event' });
+      return res.status(400).json({ message: 'You are already registered for this event' });
     }
+
+    // Check if event has reached maximum attendees
     if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
-      return res.status(400).json({ error: 'Event is full' });
+      return res.status(400).json({ message: 'Event has reached maximum capacity' });
     }
+
+    // Add user to attendees
     event.attendees.push(req.user.id);
     await event.save();
-    res.json(event);
+
+    res.status(200).json({ message: 'Successfully registered for the event' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error registering for event:', error);
+    res.status(500).json({ message: 'Error registering for event', error: error.message });
   }
 });
 

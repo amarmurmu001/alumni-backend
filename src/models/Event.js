@@ -8,6 +8,7 @@ const eventSchema = new mongoose.Schema({
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   attendees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   maxAttendees: { type: Number },
+  registrationLink: { type: String }, // Make sure this line is present
   createdAt: { type: Date, default: Date.now },
 });
 
