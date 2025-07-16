@@ -21,8 +21,9 @@ const donationSchema = new mongoose.Schema({
   razorpayPaymentId: {
     type: String,
     // Will be added after payment verification
+    unique: true,
     sparse: true,
-    unique: true
+    default: undefined
   },
   status: {
     type: String,

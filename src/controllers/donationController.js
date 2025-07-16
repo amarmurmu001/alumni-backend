@@ -21,19 +21,25 @@ exports.createOrder = async (req, res) => {
 
     const order = await razorpay.orders.create(options);
     
-    // Create a pending donation record
-    const donation = new Donation({
+    // Create a pending donation record with explicit fields only
+    const donationData = {
       userId: isAnonymous ? null : req.user.id,
       amount,
       razorpayOrderId: order.id,
       isAnonymous,
-      status: 'pending',
-      donorInfo: isAnonymous ? null : {
+      status: 'pending'
+    };
+
+    // Add donor info only for non-anonymous donations
+    if (!isAnonymous) {
+      donationData.donorInfo = {
         name: `${req.user.firstName} ${req.user.lastName}`,
         email: req.user.email,
         phone: donorInfo?.phone || ''
-      }
-    });
+      };
+    }
+
+    const donation = new Donation(donationData);
 
     await donation.save();
 

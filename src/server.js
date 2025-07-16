@@ -42,7 +42,6 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
 const db = mongoose.connection;
@@ -59,22 +58,22 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/user', userRoutes);
 
-// Update other routes as needed
-app.get('/', (req, res) => {
-  res.send('Alumni Association Platform API');
-});
+// // Update other routes as needed
+// app.get('/', (req, res) => {
+//   res.send('Alumni Association Platform API');
+// });
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is running' });
-});
+// app.get('/api/health', (req, res) => {
+//   res.status(200).json({ status: 'OK', message: 'Server is running' });
+// });
 
-app.post('/api/auth/login', async (req, res) => {
-  // Your login logic here
-});
+// app.post('/api/auth/login', async (req, res) => {
+//   // Your login logic here
+// });
 
-app.post('/api/auth/forgot-password', async (req, res) => {
-  // Your forgot password logic here
-});
+// app.post('/api/auth/forgot-password', async (req, res) => {
+//   // Your forgot password logic here
+// });
 
 // Only start the server if we're not in production (i.e., not on Vercel)
 if (process.env.NODE_ENV !== 'production') {
